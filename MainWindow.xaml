@@ -1,0 +1,61 @@
+﻿<Window x:Class="ImportOpenCNPJNet.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ImportOpenCNPJNet"
+        mc:Ignorable="d"
+        Title="Import Open CNPJ" Height="764" Width="1366">
+    <Grid x:Name="step1Grid" Margin="10,0,0,10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="81*"/>
+            <ColumnDefinition Width="593*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="step1" HorizontalAlignment="Left" x:Uid="step1" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Text="Passo 1 - Configure o Banco de Dados" Grid.ColumnSpan="2"/>
+        <Label x:Name="dbtypeLabel" x:Uid="dbtypeLabel" Margin="10,47,0,0" Width="405" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Selecione o Tipo de Banco de Dados" FontSize="16" Grid.ColumnSpan="2"/>
+        <ComboBox x:Name="dbType" Margin="10,83,0,0" Width="405" x:Uid="dbtype" FontFamily="Segoe UI" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20" Grid.ColumnSpan="2"/>
+        <Label x:Name="dbServerLabel" x:Uid="dbServerLabel" Margin="279,47,0,0" Width="405" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Endereço do Servidor" FontSize="16" Grid.Column="1"/>
+        <TextBox x:Name="dbServer" HorizontalAlignment="Left" x:Uid="dbserver" Margin="279,83,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="405" FontFamily="Segoe UI" Height="35" FontSize="20" Grid.Column="1" />
+        <Label x:Name="dbUserLabel" x:Uid="dbUserLabel" Margin="10,123,0,0" Width="405" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Usuário do Banco de Dados" FontSize="16" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="dbUser" HorizontalAlignment="Left" x:Uid="dbUser" Margin="10,159,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="405" FontFamily="Segoe UI" Height="35" FontSize="20" Grid.ColumnSpan="2" />
+        <Label x:Name="dbPassLabel" x:Uid="dbPassLabel" Margin="279,123,0,0" Width="405" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Senha do Banco de Dados" FontSize="16" Grid.Column="1"/>
+        <PasswordBox x:Name="dbPass" x:Uid="dbPass" HorizontalAlignment="Left" Margin="279,159,0,0" VerticalAlignment="Top" Width="405" Height="35" FontSize="20" Grid.Column="1" />
+        <Button x:Name="connectbtn" Content="Testar Conexão ..." Width="405" Margin="10,235,0,0" VerticalAlignment="Top" AllowDrop="True" x:Uid="connectbtn" FontSize="20" FontFamily="Segoe UI" Height="35" HorizontalAlignment="Left" Click="Connectbtn_Click" Grid.ColumnSpan="2" />
+        <Image x:Name="successIcon" HorizontalAlignment="Left" Height="45" Margin="689,231,0,0" VerticalAlignment="Top" Width="36" Visibility="Hidden" Source="Assets/Success.png" Grid.Column="1"/>
+        <Label x:Name="selectDbLabel" x:Uid="selectDbLabel" Margin="279,199,0,0" Width="405" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Banco de Dados" FontSize="16" Grid.Column="1"/>
+        <ComboBox x:Name="avalidableDatabases" Margin="279,235,0,0" Width="405" x:Uid="selectdb" FontFamily="Segoe UI" IsEnabled="False" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20" Grid.Column="1" />
+        <DataGrid x:Name="importParams" HorizontalAlignment="Left" Height="105" Margin="10,281,0,0" VerticalAlignment="Top" Width="836" AutoGenerateColumns="False" FontSize="16" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" IsEnabled="False" Grid.ColumnSpan="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Registro" Binding="{Binding RegistryName}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Nome da Tabela" Binding="{Binding TableName}" />
+                <DataGridCheckBoxColumn Header="Criar Tabela?" Binding="{Binding CreateTable}" />
+                <DataGridCheckBoxColumn Header="Resetar Dados?" Binding="{Binding ResetData}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock x:Name="step2" HorizontalAlignment="Left" x:Uid="step1" Margin="10,391,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Text="Passo 2 - Adicione os Arquivos" Grid.ColumnSpan="2"/>
+        <Button x:Name="addFileBtn" x:Uid="addFileBtn" Content="+ Adicionar Arquivo" Margin="449,428,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.218,-0.172" Height="35" Width="235" Click="AddFileBtn_Click" IsEnabled="False" FontSize="16" HorizontalAlignment="Left" Grid.Column="1"/>
+        <DataGrid x:Name="importFiles" HorizontalAlignment="Left" Height="142" Margin="10,468,0,0" VerticalAlignment="Top" Width="836" FontSize="16" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" IsEnabled="False" Grid.ColumnSpan="2">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Progresso" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0, 0, 0, 0">
+                                <ProgressBar HorizontalAlignment="Left" Height="10" Margin="20,0,0,0" Width="200" Visibility="{Binding LoadingData}" Value="{Binding Progress}"/>
+                                <ProgressBar HorizontalAlignment="Left" Height="10" Margin="20,0,0,0" Width="200" Visibility="{Binding LoadingMetaData}" IsIndeterminate="True" />
+                                <Image HorizontalAlignment="Left" Height="20" Margin="20,0,0,0" Width="22" Source="Assets/Success.png" Visibility="{Binding LoadedMetaData}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn x:Name="FilePath" Binding="{Binding FilePath}" Header="Arquivo"/>
+                <DataGridTextColumn x:Name="TotalCompanies" Binding="{Binding TotalCompanies}" Header="Empresas" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="TotalPartners" Binding="{Binding TotalPartners}" Header="Sócios" IsReadOnly="True"/>
+                <DataGridTextColumn x:Name="TotalCNAEs" Binding="{Binding TotalCNAEs}" Header="CNAEs" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button x:Uid="btnLoadMetadata" x:Name="btnLoadMetadata" Content="Carregar Metadados" Margin="329,615,682,0" VerticalAlignment="Top" Click="BtnLoadMetadata_Click" IsEnabled="False" FontSize="16" Height="35" Grid.Column="1"/>
+        <Button x:Name="startImportBtn" x:Uid="startImportBtn" Content="Iniciar Importação" Margin="509,615,0,0" VerticalAlignment="Top" Click="StartImportBtn_Click" IsEnabled="False" FontSize="16" Height="35" HorizontalAlignment="Left" Width="175" Grid.Column="1"/>
+        <ProgressBar x:Name="totalProgress" x:Uid="totalProgress" HorizontalAlignment="Left" Height="28" Margin="10,655,0,0" VerticalAlignment="Top" Width="836" Visibility="Visible" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="importStatusText" HorizontalAlignment="Left" Margin="10,688,0,10" Text="" TextWrapping="Wrap" Width="836" FontFamily="Segoe UI" Grid.ColumnSpan="2"/>
+    </Grid>
+</Window>
